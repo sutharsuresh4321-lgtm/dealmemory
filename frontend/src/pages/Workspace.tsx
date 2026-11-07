@@ -10,6 +10,7 @@ import { ChatTab } from './tabs/ChatTab';
 import { TimelineTab } from './tabs/TimelineTab';
 import { LogInteractionModal } from './tabs/LogInteractionModal';
 import { CreateAccountModal } from './tabs/CreateAccountModal';
+import { BandAISyncModal } from './tabs/BandAISyncModal';
 import { Account, AccountDetail, CompareResult, ExtractedFacts, Memory } from '../types';
 import { api } from '../api/client';
 import { FileText, Mail, Target, MessageSquare, History, Users, Building, DollarSign } from 'lucide-react';
@@ -31,6 +32,7 @@ export const Workspace: React.FC = () => {
   // Modals
   const [isLogModalOpen, setIsLogModalOpen] = useState<boolean>(false);
   const [isCreateAccountOpen, setIsCreateAccountOpen] = useState<boolean>(false);
+  const [isBandAISyncOpen, setIsBandAISyncOpen] = useState<boolean>(false);
   const [isSeeding, setIsSeeding] = useState<boolean>(false);
 
   // Fetch accounts on load
@@ -131,6 +133,7 @@ export const Workspace: React.FC = () => {
         onToggleMemory={() => setMemoryOn(!memoryOn)}
         onOpenCompare={handleOpenCompare}
         onReloadSeed={handleReloadSeed}
+        onOpenBandAISync={() => setIsBandAISyncOpen(true)}
         isSeeding={isSeeding}
       />
 
@@ -326,6 +329,15 @@ export const Workspace: React.FC = () => {
           setAccounts((prev) => [newAcc, ...prev]);
           setSelectedAccountId(newAcc.id);
         }}
+      />
+
+      {/* Band AI Sync Modal */}
+      <BandAISyncModal
+        isOpen={isBandAISyncOpen}
+        onClose={() => setIsBandAISyncOpen(false)}
+        accounts={accounts}
+        selectedAccountId={selectedAccountId}
+        onSyncSuccess={handleLoggedSuccess}
       />
     </div>
   );

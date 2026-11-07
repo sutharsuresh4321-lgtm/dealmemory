@@ -1,11 +1,12 @@
 import React from 'react';
-import { Brain, Sparkles, Database, RotateCcw } from 'lucide-react';
+import { Brain, Sparkles, Database, RotateCcw, Mic } from 'lucide-react';
 
 interface NavbarProps {
   memoryOn: boolean;
   onToggleMemory: () => void;
   onOpenCompare: () => void;
   onReloadSeed: () => void;
+  onOpenBandAISync: () => void;
   isSeeding?: boolean;
 }
 
@@ -14,6 +15,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onToggleMemory,
   onOpenCompare,
   onReloadSeed,
+  onOpenBandAISync,
   isSeeding = false,
 }) => {
   return (
@@ -45,6 +47,15 @@ export const Navbar: React.FC<NavbarProps> = ({
         >
           <RotateCcw className={`w-3.5 h-3.5 ${isSeeding ? 'animate-spin text-purple-400' : ''}`} />
           <span>{isSeeding ? 'Seeding...' : 'Reset Seed'}</span>
+        </button>
+
+        {/* Band AI Desktop Sync Button */}
+        <button
+          onClick={onOpenBandAISync}
+          className="flex items-center space-x-1.5 px-3.5 py-1.5 rounded-lg border border-emerald-500/40 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 text-xs font-semibold shadow-sm transition-all hover:scale-[1.02]"
+        >
+          <Mic className="w-3.5 h-3.5 text-emerald-400" />
+          <span>Band AI Sync</span>
         </button>
 
         {/* Compare Button */}
