@@ -1,0 +1,26 @@
+[
+  {
+    "id": "out-cloud-1",
+    "account_id": "acc-cloudscale-tech",
+    "result": "won",
+    "reason": "Customer chose us due to superior persistent agent memory capabilities, rapid SOC2 Type II documentation response, and transparent phased rollout pricing.",
+    "tactics": "Offered Phase 1 introductory tier, scheduled joint architecture review with lead engineer, and delivered compliance packet in under 24 hours.",
+    "date": "2025-11-15T16:00:00Z"
+  },
+  {
+    "id": "out-fin-1",
+    "account_id": "acc-finguard-bank",
+    "result": "won",
+    "reason": "Overcame compliance and latency hesitations by providing custom data segregation proof and running a successful 14-day production pilot.",
+    "tactics": "Executive sponsor alignment between our CTO and their VP of Risk; executed customized security addendum with guaranteed SLAs.",
+    "date": "2025-12-05T11:00:00Z"
+  },
+  {
+    "id": "out-nova-1",
+    "account_id": "acc-novacare-health",
+    "result": "lost",
+    "reason": "Hospital governance mandated fully air-gapped on-premise installation without outbound internet connectivity, which our cloud architecture did not support.",
+    "tactics": "Attempted VPC peering and dedicated single-tenant instance proposal, but prospect security board declined any external cloud reliance.",
+    "date": "2025-12-28T09:30:00Z"
+  }
+]

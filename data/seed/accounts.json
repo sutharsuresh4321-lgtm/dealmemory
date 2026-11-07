@@ -1,0 +1,58 @@
+[
+  {
+    "id": "acc-apex-logistics",
+    "name": "Apex Logistics Group",
+    "industry": "Logistics & Supply Chain",
+    "stage": "Negotiation",
+    "value": 140000.0,
+    "created_at": "2026-01-10T09:00:00Z"
+  },
+  {
+    "id": "acc-cloudscale-tech",
+    "name": "CloudScale Systems",
+    "industry": "Enterprise SaaS",
+    "stage": "Closed Won",
+    "value": 185000.0,
+    "created_at": "2025-11-15T14:30:00Z"
+  },
+  {
+    "id": "acc-finguard-bank",
+    "name": "FinGuard Financial",
+    "industry": "Fintech & Banking",
+    "stage": "Closed Won",
+    "value": 220000.0,
+    "created_at": "2025-12-01T10:00:00Z"
+  },
+  {
+    "id": "acc-novacare-health",
+    "name": "NovaCare Health Systems",
+    "industry": "Healthcare IT",
+    "stage": "Closed Lost",
+    "value": 95000.0,
+    "created_at": "2025-12-10T11:00:00Z"
+  },
+  {
+    "id": "acc-stride-payments",
+    "name": "Stride Global Payments",
+    "industry": "Fintech",
+    "stage": "Proposal",
+    "value": 160000.0,
+    "created_at": "2026-01-20T16:00:00Z"
+  },
+  {
+    "id": "acc-biovista-labs",
+    "name": "BioVista Therapeutics",
+    "industry": "Life Sciences",
+    "stage": "Discovery",
+    "value": 85000.0,
+    "created_at": "2026-02-05T13:15:00Z"
+  },
+  {
+    "id": "acc-zenith-retail",
+    "name": "Zenith Omnichannel Retail",
+    "industry": "E-Commerce & Retail",
+    "stage": "Qualification",
+    "value": 110000.0,
+    "created_at": "2026-02-14T09:30:00Z"
+  }
+]

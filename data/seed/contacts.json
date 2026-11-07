@@ -1,0 +1,65 @@
+[
+  {
+    "id": "con-apex-1",
+    "account_id": "acc-apex-logistics",
+    "name": "Marcus Vance",
+    "role": "Chief Financial Officer",
+    "notes": "Highly budget-conscious. Demands hard ROI metrics before Q3 board review."
+  },
+  {
+    "id": "con-apex-2",
+    "account_id": "acc-apex-logistics",
+    "name": "Elena Rostova",
+    "role": "VP of Operations",
+    "notes": "Frustrated with FleetTrack's slow 3-week onboarding SLA. Wants fast deployment."
+  },
+  {
+    "id": "con-apex-3",
+    "account_id": "acc-apex-logistics",
+    "name": "David Chen",
+    "role": "Chief Information Security Officer",
+    "notes": "Requires SOC2 Type II report and strict FedRAMP compatibility."
+  },
+  {
+    "id": "con-cloud-1",
+    "account_id": "acc-cloudscale-tech",
+    "name": "Samantha Wright",
+    "role": "VP of Engineering",
+    "notes": "Bought after we offered phased rollout and shared SOC2 audit."
+  },
+  {
+    "id": "con-fin-1",
+    "account_id": "acc-finguard-bank",
+    "name": "Robert Sterling",
+    "role": "Head of Risk & Compliance",
+    "notes": "Won deal by providing tailored security addendum and mutual success criteria."
+  },
+  {
+    "id": "con-nova-1",
+    "account_id": "acc-novacare-health",
+    "name": "Dr. Arthur Pendelton",
+    "role": "Chief Medical Information Officer",
+    "notes": "Lost deal due to lack of on-premise deployment option for HIPAA isolation."
+  },
+  {
+    "id": "con-stride-1",
+    "account_id": "acc-stride-payments",
+    "name": "Anil Mehta",
+    "role": "Chief Technology Officer",
+    "notes": "Currently evaluating latency benchmarks against competitor Stripe Sigma."
+  },
+  {
+    "id": "con-bio-1",
+    "account_id": "acc-biovista-labs",
+    "name": "Dr. Claire Dupont",
+    "role": "Director of Informatics",
+    "notes": "Exploring memory layers for lab automation pipelines."
+  },
+  {
+    "id": "con-zen-1",
+    "account_id": "acc-zenith-retail",
+    "name": "Jordan Bell",
+    "role": "VP of Customer Experience",
+    "notes": "Needs omnichannel synchronization across 450 brick-and-mortar stores."
+  }
+]

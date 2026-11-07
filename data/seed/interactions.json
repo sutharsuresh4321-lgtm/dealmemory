@@ -1,0 +1,138 @@
+[
+  {
+    "id": "inter-apex-1",
+    "account_id": "acc-apex-logistics",
+    "type": "call",
+    "date": "2026-01-12T15:00:00Z",
+    "raw_text": "Discovery call with VP of Operations Elena Rostova. Apex has 1,200 fleet vehicles and their current route dispatch system suffers from high latency and disconnected communication. Elena stated that dispatchers spend 4 hours a day manually consolidating load exceptions. They are actively evaluating new platforms. Timeline: aiming to finalize vendor by end of Q2.",
+    "extracted_json": {
+      "objections": [],
+      "competitors": [],
+      "stakeholders": ["Elena Rostova (VP of Operations)"],
+      "commitments": ["Send product architecture overview and schedule deep-dive demo"],
+      "pricing": ["Target budget ballpark $120k - $150k ARR"],
+      "sentiment": "positive",
+      "summary": "Initial discovery call identifying 4hr/day dispatcher overhead across 1,200 vehicles."
+    },
+    "retained": true
+  },
+  {
+    "id": "inter-apex-2",
+    "account_id": "acc-apex-logistics",
+    "type": "call",
+    "date": "2026-01-26T14:00:00Z",
+    "raw_text": "Demo with Elena Rostova and CFO Marcus Vance. Marcus immediately pushed back on pricing, stating $140,000 ARR exceeds their allocated Q3 transportation tech modernization budget cap by 18%. Marcus warned that without demonstrable 3x ROI payback within 9 months, procurement will veto the deal. Elena was impressed with automated exception routing.",
+    "extracted_json": {
+      "objections": ["CFO Marcus Vance budget objection: $140k ARR exceeds allocated tech budget by 18%"],
+      "competitors": [],
+      "stakeholders": ["Marcus Vance (CFO)", "Elena Rostova (VP of Operations)"],
+      "commitments": ["Build customized 3x ROI model and payback timeline for Marcus"],
+      "pricing": ["$140,000 ARR quote challenged as 18% over cap"],
+      "sentiment": "neutral",
+      "summary": "Demo presentation where CFO Marcus Vance demanded strict 3x ROI payback justification."
+    },
+    "retained": true
+  },
+  {
+    "id": "inter-apex-3",
+    "account_id": "acc-apex-logistics",
+    "type": "call",
+    "date": "2026-02-09T16:30:00Z",
+    "raw_text": "Technical sync with Elena Rostova and lead architect. Elena revealed they have been in active proof-of-concept talks with FleetTrack Pro. However, FleetTrack Pro quoted a rigid 3-week onboarding SLA and custom integration fees of $25k. Elena prefers our turnkey API integration, but FleetTrack is offering a 15% first-year discount if signed by Friday.",
+    "extracted_json": {
+      "objections": ["Competitor FleetTrack Pro offering aggressive 15% discount for immediate signing"],
+      "competitors": ["FleetTrack Pro"],
+      "stakeholders": ["Elena Rostova (VP of Operations)"],
+      "commitments": ["Highlight our 48-hour API integration speed and waiving initial setup charges"],
+      "pricing": ["FleetTrack offering 15% discount on competing bid"],
+      "sentiment": "positive",
+      "summary": "Rival FleetTrack Pro mentioned; customer dissatisfied with FleetTrack's 3-week onboarding SLA."
+    },
+    "retained": true
+  },
+  {
+    "id": "inter-apex-4",
+    "account_id": "acc-apex-logistics",
+    "type": "email",
+    "date": "2026-02-23T11:15:00Z",
+    "raw_text": "Email follow-up from AE to CFO Marcus Vance and Elena Rostova: 'Marcus, as promised on our sync, I am attaching the revised phased tier pricing sheet. We structured Phase 1 at $95,000 ARR covering the core 600 Midwest fleet, expanding to $140,000 in Year 2 upon verifying the 3x dispatch savings.' Marcus replied: 'Received. Reviewing with finance team this Thursday.'",
+    "extracted_json": {
+      "objections": [],
+      "competitors": [],
+      "stakeholders": ["Marcus Vance (CFO)", "Elena Rostova (VP of Operations)"],
+      "commitments": ["Delivered promised phased rollout pricing sheet ($95k Phase 1 -> $140k Year 2)"],
+      "pricing": ["Phased pricing: $95,000 ARR Phase 1 scaling to $140,000 ARR"],
+      "sentiment": "positive",
+      "summary": "AE delivered promised phased pricing sheet; CFO confirmed internal finance review."
+    },
+    "retained": true
+  },
+  {
+    "id": "inter-apex-5",
+    "account_id": "acc-apex-logistics",
+    "type": "call",
+    "date": "2026-03-04T10:00:00Z",
+    "raw_text": "Security review meeting with CISO David Chen. David presented their 140-point Enterprise Vendor Security Questionnaire. Main sticking points are data retention policies in transit and whether customer tenant data is segregated at rest. David stressed that before MSAs can be signed, we must return the completed security questionnaire and provide the latest SOC2 Type II audit report.",
+    "extracted_json": {
+      "objections": ["Security compliance gate: 140-point questionnaire and SOC2 Type II audit mandatory"],
+      "competitors": [],
+      "stakeholders": ["David Chen (CISO)"],
+      "commitments": ["Complete 140-point security questionnaire and attach SOC2 Type II report by Monday"],
+      "pricing": [],
+      "sentiment": "neutral",
+      "summary": "CISO David Chen mandated completed 140-point security questionnaire and SOC2 Type II audit."
+    },
+    "retained": true
+  },
+  {
+    "id": "inter-cloud-1",
+    "account_id": "acc-cloudscale-tech",
+    "type": "call",
+    "date": "2025-10-05T14:00:00Z",
+    "raw_text": "Initial evaluation call with Samantha Wright, VP of Engineering. CloudScale was struggling with state persistence across distributed agent clusters. They evaluated building an in-house vector cache.",
+    "extracted_json": {
+      "objections": ["Build vs buy hesitation"],
+      "competitors": ["Internal build / Pinecone DIY"],
+      "stakeholders": ["Samantha Wright (VP of Engineering)"],
+      "commitments": ["Provide architectural benchmark on latency and memory recall"],
+      "pricing": ["$185,000 ARR annual enterprise license"],
+      "sentiment": "positive",
+      "summary": "CloudScale evaluated building in-house vs buying persistent memory infrastructure."
+    },
+    "retained": true
+  },
+  {
+    "id": "inter-cloud-2",
+    "account_id": "acc-cloudscale-tech",
+    "type": "call",
+    "date": "2025-11-01T15:30:00Z",
+    "raw_text": "Commercial closing call with Samantha Wright. Overcame security review by delivering SOC2 Type II audit report within 24 hours. Samantha approved contract for $185,000 ARR.",
+    "extracted_json": {
+      "objections": [],
+      "competitors": [],
+      "stakeholders": ["Samantha Wright (VP of Engineering)"],
+      "commitments": ["Execute MSA and schedule kickoff workshop"],
+      "pricing": ["$185,000 ARR closed"],
+      "sentiment": "positive",
+      "summary": "Deal won after providing rapid SOC2 compliance certification and phased rollout terms."
+    },
+    "retained": true
+  },
+  {
+    "id": "inter-nova-1",
+    "account_id": "acc-novacare-health",
+    "type": "call",
+    "date": "2025-11-20T10:00:00Z",
+    "raw_text": "Discovery call with Dr. Arthur Pendelton. NovaCare required strict air-gapped on-premise Kubernetes deployment to comply with internal hospital network privacy guidelines. Cloud SaaS was non-negotiable for their core patient records.",
+    "extracted_json": {
+      "objections": ["Refusal of multi-tenant cloud; strict on-prem air-gap requirement"],
+      "competitors": ["Epic Systems Internal AI"],
+      "stakeholders": ["Dr. Arthur Pendelton (CMIO)"],
+      "commitments": ["Consult engineering on private cloud VPC deployment"],
+      "pricing": ["$95,000 ARR"],
+      "sentiment": "negative",
+      "summary": "Deal blocked on strict on-prem air-gapped deployment requirement."
+    },
+    "retained": true
+  }
+]
