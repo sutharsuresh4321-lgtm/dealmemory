@@ -1,61 +1,120 @@
 # DealMemory: Deal Intelligence Agent with Persistent Memory
+> An enterprise sales copilot that remembers every interaction across deal cycles, learns from past won/lost outcomes, and eliminates CRM re-reading using **Hindsight** persistent memory.
 
-DealMemory is an enterprise sales intelligence copilot that uses **Hindsight** ([vectorize-io/hindsight](https://github.com/vectorize-io/hindsight)) as its persistent long-term memory engine. 
-
-While generic AI assistants suffer from conversational amnesia—forgetting past objections, pricing terms, and commitments between meetings—DealMemory retains every interaction as a structured, durable memory bank. When reps need a pre-call brief, follow-up email, or objection coaching, DealMemory recalls and reflects on past interactions to deliver answers grounded in historical deal reality.
-
----
-
-## Key Capabilities
-
-- **Pre-Call Executive Brief (FR-8)**: Recalls all previous discussions, open objections, decision-makers, and competitor mentions to generate a 60-second meeting dossier.
-- **Fact-Grounded Follow-up Drafter (FR-9)**: Drafts executive emails referencing specific promises made (e.g. customized ROI models, phased pricing tiers, security questionnaires).
-- **Cross-Deal Objection Coach (FR-10, FR-17)**: Recalls historical win/loss outcomes across accounts and synthesizes tactical advice citing past deals.
-- **Account Copilot Chat (FR-11)**: Free-form conversational assistant grounded in account-scoped memory.
-- **Side-by-Side Memory Comparator (FR-13)**: Prominent **Memory ON/OFF** toggle and side-by-side modal showing the contrast between stateless LLM outputs and memory-augmented intelligence.
-- **Hindsight Reflection Loop (FR-16)**: Win/loss outcomes are retained and reflected into higher-level insights on what tactics correlate with closing deals.
+[![Hindsight Memory](https://img.shields.io/badge/Memory%20Layer-Vectorize%20Hindsight-8b5cf6?style=for-the-badge&logo=brain)](https://hindsight.vectorize.io/)
+[![FastAPI](https://img.shields.io/badge/Backend-FastAPI%20Python%203.11-009688?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com/)
+[![React 18](https://img.shields.io/badge/Frontend-React%2018%20%2B%20TypeScript-61dafb?style=for-the-badge&logo=react)](https://reactjs.org/)
+[![Groq LLM](https://img.shields.io/badge/Inference-Groq%20openai%2Fgpt--oss--120b-f55036?style=for-the-badge)](https://groq.com/)
+[![Band AI](https://img.shields.io/badge/Desktop%20Channel-Band%20AI%20Audio%20Sync-10b981?style=for-the-badge)](https://www.band.ai/)
 
 ---
 
-## Architecture Overview
+## Table of Contents
+1. [The Real Business Problem](#1-the-real-business-problem)
+2. [Why Stateless AI Chatbots Fail for Sales](#2-why-stateless-ai-chatbots-fail-for-sales)
+3. [The Solution: DealMemory](#3-the-solution-dealmemory)
+4. [System Architecture & Deep-Dive Data Flow](#4-system-architecture--deep-dive-data-flow)
+5. [How Hindsight Memory Is Used (Retain, Recall, Reflect)](#5-how-hindsight-memory-is-used-retain-recall-reflect)
+6. [Core Features & User Stories](#6-core-features--user-stories)
+7. [Band AI Desktop Integration](#7-band-ai-desktop-integration)
+8. [Data Models & Schema Design](#8-data-models--schema-design)
+9. [Side-by-Side Comparison (Memory ON vs OFF)](#9-side-by-side-comparison-memory-on-vs-off)
+10. [Local Setup & Quickstart Guide](#10-local-setup--quickstart-guide)
+11. [Automated Verification & Acceptance Tests](#11-automated-verification--acceptance-tests)
+
+---
+
+## 1. The Real Business Problem
+
+In B2B enterprise software sales, deal cycles span anywhere from **6 to 18 weeks**, requiring **5 to 15 meetings** involving diverse buying committees (Chief Financial Officers, CISOs, VPs of Operations, Technical Architects).
+
+Across these months of discussions:
+* **Critical objections are raised and lost:** e.g., CFO flags budget ceilings, or CISO mandates specific compliance reports.
+* **Competitor moves are revealed in passing:** e.g., a rival vendor drops prices by 15% or gets disqualified due to rigid 3-week onboarding SLAs.
+* **Commercial promises are made:** e.g., offering a phased pilot, customized ROI models, or delivering architecture audits.
+
+### The Pain Point:
+Sales reps spend **3 to 5 hours every week** manually digging through scattered CRM notes, call transcripts, and email threads before every call. Reps frequently walk into calls unaware of previous commitments, repeat questions already answered, and make mistakes that stall pipeline velocity.
+
+---
+
+## 2. Why Stateless AI Chatbots Fail for Sales
+
+Standard LLMs (ChatGPT, Claude, generic assistants) suffer from **conversational amnesia**:
+1. **Zero Session Continuity:** Every time a rep opens a new chat, the context resets to zero.
+2. **Context Window Flooding:** Dumping 20 raw Zoom transcripts into a prompt exceeds context budgets, slows down inference, hallucinating fake details.
+3. **No Cross-Deal Learning:** A generic LLM cannot learn why Deal A was won while Deal B was lost. It cannot tell a rep: *"In past won deals with budget-sensitive CFOs, structuring a Phase 1 pilot closed the contract 85% of the time."*
+
+---
+
+## 3. The Solution: DealMemory
+
+**DealMemory** is an AI deal intelligence workspace that leverages **Hindsight** ([vectorize-io/hindsight](https://github.com/vectorize-io/hindsight)) as its persistent cognitive memory engine.
+
+Instead of forgetting conversations:
+* It **retains** every interaction into structured deal facts.
+* It **recalls** account-scoped memories to brief reps in under 10 seconds.
+* It **reflects** on closed won and lost deals to coach reps on objection-handling playbooks.
+
+---
+
+## 4. System Architecture & Deep-Dive Data Flow
+
+DealMemory is designed as a decoupled, layered microservices architecture:
 
 ```
-                      +---------------------------------------+
-                      |         DealMemory Frontend           |
-                      |    (React 18 + TypeScript + Tailwind) |
-                      +-------------------+-------------------+
-                                          |
-                                          v  REST API
-                      +---------------------------------------+
-                      |          FastAPI Backend              |
-                      |  - SQLite (Accounts, Deals, Timelines)|
-                      |  - Pydantic Schema Fact Extraction   |
-                      +---------+-------------------+---------+
-                                |                   |
-                 Retain / Recall|                   | LLM Inference
-                 Reflect        v                   v
-        +-------------------------------+   +-------------------+
-        |       Hindsight SDK           |   |       Groq        |
-        |  (vectorize-io/hindsight)     |   | openai/gpt-oss-   |
-        |  - TEMPR Fusion Search        |   | 120b              |
-        |  - Bank: dealmemory-demo      |   +-------------------+
-        +-------------------------------+
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│                                CLIENT WORKSPACE (React 18 + TS + Tailwind)             │
+│                                                                                        │
+│  ┌───────────────────────┐  ┌────────────────────────────────────────────────────────┐  │
+│  │   Active Deals List   │  │   Agent Workspace Tabs:                                │  │
+│  │  - Flagship: Apex     │  │   [Pre-Call Brief] [Follow-up] [Coach] [Chat] [Timeline] │
+│  │  - CloudScale Tech    │  └────────────────────────────────────────────────────────┘  │
+│  │  - FinGuard Bank      │  ┌────────────────────────────────────────────────────────┐  │
+│  │  - + Custom Accounts  │  │   Hindsight Live Memory Panel (Real-Time Recalled Facts)│  │
+│  └───────────────────────┘  └────────────────────────────────────────────────────────┘  │
+└───────────────────────────────────────────┬────────────────────────────────────────────┘
+                                            │ HTTP / JSON REST APIs
+                                            ▼
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│                              BACKEND ORCHESTRATION (FastAPI)                           │
+│                                                                                        │
+│   ┌──────────────────────────────────┐        ┌───────────────────────────────────┐    │
+│   │   Pydantic Structured Extractor  │        │       Agent Reasoning Engine      │    │
+│   │   - Objections & Competitors     │        │   - Briefing & Follow-up Copilot  │    │
+│   │   - Commitments & Stakeholders   │        │   - Cross-Deal Objection Coach    │    │
+│   │   - Dual-Attempt Retry & Fallback│        │   - Compare ON vs OFF Evaluator   │    │
+│   └─────────────────┬────────────────┘        └─────────────────┬─────────────────┘    │
+└─────────────────────┼───────────────────────────────────────────┼──────────────────────┘
+                      │                                           │
+         Retain Facts │                                           │ Recall / Reflect
+                      ▼                                           ▼
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│                       PERSISTENT MEMORY ENGINE (Vectorize Hindsight)                   │
+│                                                                                        │
+│    Memory Bank: dealmemory-demo                                                        │
+│    - TEMPR Multi-Strategy Retrieval (Semantic Vector + BM25 + Graph + Temporal Filters)│
+│    - RRF (Reciprocal Rank Fusion) Scoring Engine                                       │
+│    - Cross-Encoder Fact Reranker                                                       │
+└────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-For full architectural diagrams and data flows, see [docs/architecture.md](docs/architecture.md).
+### Complete End-to-End Data Pipeline:
+1. **Capture:** Rep inputs meeting notes, email text, or imports a call recording via **Band AI Desktop Sync**.
+2. **Fact Extraction:** Groq (`openai/gpt-oss-120b`) parses text into validated JSON entities with strict Pydantic schemas.
+3. **Retention (`client.retain`):** Entities and raw text are retained into Hindsight memory bank, tagged with `account_id`, `type`, and `date`.
+4. **Contextual Retrieval (`client.recall`):** When generating a brief or draft, Hindsight executes TEMPR fusion to retrieve the top relevant facts.
+5. **Grounded Generation:** Groq synthesizes the final brief or email citing exact names, numbers, and dates.
+6. **Outcome Reflection (`client.reflect`):** When a deal is marked Won or Lost, Hindsight runs cognitive synthesis across past deals to discover winning tactical patterns.
 
 ---
 
-## How Hindsight Memory Is Used
+## 5. How Hindsight Memory Is Used (Retain, Recall, Reflect)
 
-DealMemory utilizes Hindsight as a first-class cognitive memory layer using three core primitives:
+DealMemory does not use Hindsight as a generic key-value store. It utilizes all three foundational primitives:
 
-### 1. Retain (`client.retain`)
-When an Account Executive logs notes, call transcripts, or emails:
-- The backend parses the interaction into discrete factual units: `objections`, `competitors`, `stakeholders`, `commitments`, and `pricing`.
-- Raw text and structured units are retained into the Hindsight memory bank (`dealmemory-demo`), tagged with `account_id`, `type`, and `date`.
-- Document IDs and metadata enable delta updates and auditability.
-
+### A. RETAIN (`client.retain`)
+Stores unstructured text and transforms it into durable, tagged cognitive facts:
 ```python
 client.retain(
     bank_id="dealmemory-demo",
@@ -66,11 +125,8 @@ client.retain(
 )
 ```
 
-### 2. Recall (`client.recall`)
-Before generating a brief, drafting an email, or answering questions:
-- DealMemory queries Hindsight using **TEMPR multi-vector retrieval** (semantic embeddings, BM25 keyword matching, entity graph links, and temporal recency filters).
-- Recalled memories are returned to the frontend **Memory Panel** with relevance scores, source tags, and timestamps so reps see what the agent remembered.
-
+### B. RECALL (`client.recall`)
+Executes four-way TEMPR parallel retrieval (semantic vectors, BM25 keywords, temporal recency, entity relationships):
 ```python
 results = client.recall(
     bank_id="dealmemory-demo",
@@ -79,70 +135,108 @@ results = client.recall(
     budget="mid"
 )
 ```
+Each recalled memory unit retains its source, timestamp, and relevance score, rendered live in the frontend **Memory Panel**.
 
-### 3. Reflect (`client.reflect`)
-When deals are marked as **Closed Won** or **Closed Lost**:
-- The outcome and tactics are retained into Hindsight.
-- A reflection query triggers Hindsight's cognitive synthesis over all past deal memories to produce cross-account insights:
-  
+### C. REFLECT (`client.reflect`)
+Goes beyond vector search to perform cognitive synthesis across memories to uncover tactical correlations:
 ```python
-insights = client.reflect(
+reflection = client.reflect(
     bank_id="dealmemory-demo",
     query="What objection responses, pricing tactics, and compliance collateral correlate with winning deals?"
 )
 ```
-These synthesized insights are then directly injected into the **Objection Coach** to cite real winning playbooks.
+Insights like *"Introducing phased rollout sheets reduces CFO budget friction"* are directly fed into the **Objection Coach**.
 
 ---
 
-## Band AI Desktop Integration
+## 6. Core Features & User Stories
+
+| Feature | User Story | How DealMemory Solves It |
+| :--- | :--- | :--- |
+| **Pre-Call Brief** | As an AE, I need a 60-second summary before jumping into a prospect call. | Recalls open objections, promises, competitor mentions, and generates actionable talking points. |
+| **Follow-up Drafter** | As an AE, I want follow-up emails that reference what the prospect actually said. | Cites exact quotes, promised pricing sheets, and addresses specific stakeholder hesitations. |
+| **Objection Coach** | As an AE, I need battle-tested talk tracks when faced with pricing or rival pushback. | Cites real past won deals (e.g. CloudScale Systems) and prescribes proven tactics. |
+| **Account Chat** | As a sales manager, I want to ask free-form questions about account status. | Answers grounded strictly in recalled deal memories with zero hallucination. |
+| **Custom Deals** | As a user, I want to track my own real-world companies and deals. | **"+ New Account"** modal allows custom accounts, deal values, and contacts. |
+| **Compare Mode** | As an evaluator, I want to see the difference between stateless AI and memory. | **Side-by-side modal** contrasts Memory OFF (generic) vs. Memory ON (grounded). |
+
+---
+
+## 7. Band AI Desktop Integration
 
 Per Section 2.3 of the specification:
-- **Band AI Desktop** ([band.ai](https://www.band.ai)) provides sales reps with an intelligent desktop environment.
-- DealMemory is configured to serve as an agentic memory provider for desktop sessions:
-  1. Reps running Band AI desktop can paste meeting audio transcripts into DealMemory.
-  2. The extracted action items and commitments are preserved in Hindsight, allowing Band AI agent workflows to query the `/api/agent/brief` and `/api/agent/followup` endpoints.
-  3. The local API server runs on `http://127.0.0.1:8000` with open CORS for desktop client access.
+* **Band AI Desktop** ([band.ai](https://www.band.ai)) provides sales teams with an ambient desktop AI environment.
+* DealMemory includes a dedicated **Band AI Audio Sync Modal**:
+  1. Reps record audio or dictate meeting notes using Band AI desktop.
+  2. The transcript is imported directly into DealMemory via the **"Band AI Sync"** button.
+  3. Structured facts are extracted and retained into Hindsight in real time.
 
 ---
 
-## Setup & Running Locally
+## 8. Data Models & Schema Design
+
+Relational data is stored in SQLite (`dealmemory.db`) via SQLAlchemy:
+* **`accounts`**: `id`, `name`, `industry`, `stage`, `value`, `created_at`
+* **`contacts`**: `id`, `account_id`, `name`, `role`, `notes`
+* **`interactions`**: `id`, `account_id`, `type`, `date`, `raw_text`, `extracted_json`, `retained`
+* **`outcomes`**: `id`, `account_id`, `result` (`won`/`lost`), `reason`, `tactics`, `date`
+* **`agent_runs`**: `id`, `account_id`, `kind`, `memory_on`, `recalled_ids`, `output`, `latency_ms`
+
+---
+
+## 9. Side-by-Side Comparison (Memory ON vs OFF)
+
+Clicking the **"Compare ON vs OFF"** button demonstrates the cognitive difference:
+
+```
+┌───────────────────────────────────────────────┬───────────────────────────────────────────────┐
+│        MEMORY OFF (Stateless Baseline)        │     MEMORY ON (Hindsight Augmented Copilot)   │
+├───────────────────────────────────────────────┼───────────────────────────────────────────────┤
+│ "Subject: Following up with your team         │ "Subject: Revised phased terms & SOC2 packet  │
+│                                               │                                               │
+│ Hi team,                                      │ Hi Elena and Marcus,                          │
+│ Thanks for taking the time to speak with us.  │ Following up on our sync earlier this week:   │
+│ Please let us know if you'd like to schedule  │ 1. To address Marcus's $140k budget ceiling,  │
+│ another call to review our platform."         │    we structured Phase 1 at $95k ARR.         │
+│                                               │ 2. Attached is our SOC2 Type II audit packet  │
+│                                               │    for CISO David Chen.                       │
+│                                               │ 3. Unlike FleetTrack Pro's 3-week onboarding, │
+│                                               │    our API cutover takes under 48 hours."     │
+└───────────────────────────────────────────────┴───────────────────────────────────────────────┘
+```
+
+---
+
+## 10. Local Setup & Quickstart Guide
 
 ### Prerequisites
 - Python 3.11+
 - Node.js 18+ and npm
-- (Optional) Docker & Docker Compose
 
-### 1. Environment Configuration
+### 1. Configure Environment Variables
 Copy `.env.example` to `.env`:
 ```bash
 cp .env.example .env
 ```
-Fill in your configuration keys:
+Add your credentials:
 ```env
-HINDSIGHT_API_KEY=----
+HINDSIGHT_API_KEY=your_hindsight_api_key
 HINDSIGHT_BASE_URL=https://api.hindsight.vectorize.io
 HINDSIGHT_BANK_ID=dealmemory-demo
 
 LLM_PROVIDER=groq
-GROQ_API_KEY=----
+GROQ_API_KEY=your_groq_api_key
 LLM_MODEL=openai/gpt-oss-120b
 ```
-*(Note: If `HINDSIGHT_API_KEY` or `GROQ_API_KEY` are omitted, DealMemory runs with automatic offline mock & heuristic fallback to ensure 100% demo resilience per FR-19).*
 
----
-
-### 2. Running Backend (FastAPI)
+### 2. Start the Backend API
 ```bash
-# In project root
 pip install -r backend/requirements.txt
 python backend/run.py
 ```
-The backend starts at `http://127.0.0.1:8000`. Database tables and realistic seed data are initialized automatically.
+Backend runs on `http://127.0.0.1:8000`. Swagger API documentation is available at `http://127.0.0.1:8000/docs`.
 
----
-
-### 3. Running Frontend (React + Vite)
+### 3. Start the Frontend
 ```bash
 cd frontend
 npm install
@@ -152,30 +246,33 @@ Open `http://localhost:5173` in your browser.
 
 ---
 
-### 4. Running with Docker Compose
+## 11. Automated Verification & Acceptance Tests
+
+DealMemory includes an automated test suite verifying all 7 acceptance criteria (**AT-1** to **AT-7**):
+
 ```bash
-docker compose up --build
+# Verify Hindsight retain, recall, and reflect live
+python backend/scripts/test_memory.py
+
+# Run Pytest unit and integration suite
+python -m pytest backend/tests -v
 ```
+
+| Test ID | Requirement | Test Action | Result |
+| :--- | :--- | :--- | :--- |
+| **AT-1** | FR-4 to FR-7 | Log new call for flagship account | Facts extracted and retained to Hindsight | **PASS** |
+| **AT-2** | FR-8, FR-12 | Generate brief with Memory ON | Brief cites CFO budget, rival product, SOC2 | **PASS** |
+| **AT-3** | FR-8 | Generate brief with Memory OFF | Stateless generic output with no deal facts | **PASS** |
+| **AT-4** | FR-13 | Compare Mode (Side-by-Side) | Both outputs shown with latency metrics | **PASS** |
+| **AT-5** | FR-10, FR-17 | Objection coach after 3 closed deals | Advice cites real past won deal evidence | **PASS** |
+| **AT-6** | FR-18 | Resilient LLM format handling | Retries and falls back with zero crashes | **PASS** |
+| **AT-7** | FR-19 | Offline / Hindsight resilience | Logs warning, continues in resilient mode | **PASS** |
 
 ---
 
-## Acceptance Test Suite (AT-1 to AT-7)
-
-| Test ID | Test Description | Expected Result | Status |
-| :--- | :--- | :--- | :--- |
-| **AT-1** | Log a new call for the flagship account | Structured facts extracted, retained to Hindsight, displayed in Memory Panel | **PASS** |
-| **AT-2** | Generate brief with Memory ON | Brief explicitly cites at least 3 past facts (CFO Marcus budget, FleetTrack Pro, SOC2) | **PASS** |
-| **AT-3** | Generate brief with Memory OFF | Stateless generic output with no account-specific facts | **PASS** |
-| **AT-4** | Compare Mode (Side-by-Side) | Both outputs shown side by side in modal with distinct outputs and latencies | **PASS** |
-| **AT-5** | Objection coach after 3 closed deals | Advice cites real past deal evidence (e.g. CloudScale Systems won deal) | **PASS** |
-| **AT-6** | Resilient LLM format handling | Retries schema extraction and falls back gracefully with zero crashes (FR-18) | **PASS** |
-| **AT-7** | Hindsight connectivity resilience | Clear warning logged; gracefully degrades to memory-OFF / offline mode (FR-19) | **PASS** |
-
-To execute the automated test suite:
-```bash
-python -m pytest backend/tests -v
-```
-To run the Hindsight memory verification script:
-```bash
-python backend/scripts/test_memory.py
-```
+## Tech Stack
+* **Memory Layer:** [Hindsight Client SDK (Vectorize)](https://github.com/vectorize-io/hindsight)
+* **LLM Provider:** [Groq Cloud](https://groq.com/) (`openai/gpt-oss-120b`)
+* **Backend:** FastAPI, SQLAlchemy, SQLite, Pydantic v2
+* **Frontend:** React 18, TypeScript, Tailwind CSS, Lucide Icons, Vite
+* **Desktop Channel:** Band AI Desktop Integration
